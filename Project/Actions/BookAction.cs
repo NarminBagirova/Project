@@ -33,8 +33,20 @@ namespace Project.Actions
                 return;
             }
 
+            Console.Write("Add description:");
+            string? description=Console.ReadLine().Trim();
+
+            if(description==null)
+            {
+                Console.WriteLine("Description cannot be null");
+                return;
+            }
+
             Console.Write("Enter authors and split them with comma:");
-            var authorNames = Console.ReadLine()?.Split(',').Select(name => name.Trim()).ToList();
+            var authorNames = Console.ReadLine()?.Split(',')
+                            .Select(name => name.Trim())
+                            .Where(name => !string.IsNullOrWhiteSpace(name))
+                            .ToList();
 
             if (authorNames == null || authorNames.Count == 0)
             {
@@ -46,6 +58,7 @@ namespace Project.Actions
             {
                 Title = title,
                 PublishedYear = publishedYear,
+                Description = description
             };
 
             _bookService.AddBook(newBook);
@@ -53,14 +66,13 @@ namespace Project.Actions
             foreach (var authorName in authorNames)
             {
                 var author = _authorService.GetAuthorByName(authorName);
-                if (author != null)
+                if (author == null)
                 {
-                    var authorBook = new AuthorBook
-                    {
-                        AuthorId = author.Id,
-                        BookId = author.Id,
-                    };
-                   _authorBookService.AddAuthorBook(authorBook);
+                    Console.WriteLine($"Author '{authorName}' not found. Creating new author...");
+                    author = new Author { Name = authorName };
+                    _authorService.AddAuthor(author);
+
+                    author = _authorService.GetAuthorByName(authorName);
                 }
                 else
                 {

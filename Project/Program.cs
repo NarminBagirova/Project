@@ -16,6 +16,7 @@ namespace Project
         private static LoanAction? _loanAction;
         private static BookAction? _bookAction;
         private static AuthorAction? _authorAction;
+        private static AuthorBookService _authorBookService;
 
         static void Main(string[] args)
         {
@@ -65,13 +66,15 @@ namespace Project
             var loanRepository = new LoanRepository(context);
             var loanItemRepository= new LoanItemRepository(context);
             var authorRepository = new AuthorRepository(context);
+            var authorBookRepository = new AuthorBookRepository(context);
 
             _bookService = new BookService(bookRepository, authorRepository);
             _borrowerService = new BorrowerService(borrowerRepository);
             _loanService = new LoanService(loanItemRepository,loanRepository, bookRepository, borrowerRepository);
             _authorService = new AuthorService(authorRepository);
+            _authorBookService= new AuthorBookService(authorBookRepository);
 
-            _bookAction = new BookAction(_bookService, _authorService);
+            _bookAction = new BookAction(_bookService, _authorService, _authorBookService);
             _borrowerAction = new BorrowerAction(_borrowerService);
             _loanAction = new LoanAction(_loanService, _borrowerService, _bookService);
             _authorAction = new AuthorAction(_authorService);
