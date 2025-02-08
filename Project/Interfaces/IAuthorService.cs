@@ -11,8 +11,10 @@ namespace Project.Interfaces
     {
         List<Author> GetAllAuthors();
         Author GetAuthorById(int id);
+        List<Author> GetAuthorsByBookId(int bookId);
         void AddAuthor(Author author);
         void UpdateAuthor(Author author);
         void DeleteAuthor(int id);
+        Author GetAuthorByName(string authorName);
     }
 }

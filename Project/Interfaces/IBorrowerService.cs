@@ -14,5 +14,6 @@ namespace Project.Interfaces
         void AddBorrower(Borrower borrower);
         void UpdateBorrower(Borrower borrower);
         void RemoveBorrower(int id);
+        bool IsEmailUnique(string email);
     }
 }

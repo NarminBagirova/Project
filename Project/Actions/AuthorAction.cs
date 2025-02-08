@@ -20,7 +20,7 @@ namespace Project.Actions
         public void ShowAllAuthors()
         {
             var authors = _authorService.GetAllAuthors();
-            
+
             if (authors.Count > 0)
             {
                 Console.WriteLine("List of Authors:");
@@ -30,20 +30,38 @@ namespace Project.Actions
                 }
             }
             else
-            Console.WriteLine("There is no author.");
+                Console.WriteLine("There is no author.");
+        }
+        public void GetAuthorByName()
+        {
+            Console.Write("Enter author name: ");
+            string? name = Console.ReadLine();
+            if (string.IsNullOrEmpty(name))
+            {
+                Console.WriteLine("Author name cannot be empty!");
+                return;
+            }
+
+            var author = _authorService.GetAuthorByName(name); 
+            if (author == null)
+            {
+                Console.WriteLine("Author not found!");
+                return;
+            }
+            Console.WriteLine($"Author ID: {author.Id}, Name: {author.Name}");
         }
 
         public void GetAuthorById()
         {
             Console.Write("Enter author ID: ");
-            if(!int.TryParse(Console.ReadLine(),out int id))
+            if (!int.TryParse(Console.ReadLine(), out int id))
             {
                 Console.WriteLine("Invalid ID format!");
                 return;
             }
 
-            var author=_authorService.GetAuthorById(id);
-            if (author== null)
+            var author = _authorService.GetAuthorById(id);
+            if (author == null)
             {
                 Console.WriteLine("Author not found!");
                 return;
@@ -54,50 +72,64 @@ namespace Project.Actions
         public void AddAuthor()
         {
             Console.Write("New Author Name: ");
-            string name = Console.ReadLine();
+            string? name = Console.ReadLine();
             if (string.IsNullOrEmpty(name))
             {
                 Console.WriteLine("Author cannot be empty!");
                 return;
             }
-            var author=new Author { Name = name };
+            var author = new Author { Name = name };
             _authorService.AddAuthor(author);
             Console.WriteLine("New author added successfully");
         }
         public void EditAuthor()
         {
-            Console.WriteLine("Add author Id to edit: ");
-            int id=int.Parse(Console.ReadLine());
-            var author = _authorService.GetAuthorById(id);
+            Console.Write("Enter author ID to edit: ");
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Invalid ID format!");
+                return;
+            }
 
+            var author = _authorService.GetAuthorById(id);
             if (author == null)
             {
                 Console.WriteLine("Author not found!");
                 return;
             }
 
-            Console.Write("Author's new name: "); 
-            string newName=Console.ReadLine();
-            if(!string.IsNullOrEmpty(newName))
+            Console.Write("Author's new name: ");
+            string? newName = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newName))
             {
-                author.Name = newName;
+                Console.WriteLine("New name cannot be empty!");
+                return;
             }
+
+            author.Name = newName;
             _authorService.UpdateAuthor(author);
-            Console.WriteLine("Author updated successfully");
+            Console.WriteLine("Author updated successfully.");
         }
 
         public void DeleteAuthor()
         {
-            Console.WriteLine("Add author ID to delete: ");
-            int id= int.Parse(Console.ReadLine());
-            var author=_authorService.GetAuthorById(id);
-            if(author == null)
+            Console.Write("Enter author ID to delete: ");
+
+            if (!int.TryParse(Console.ReadLine(), out int id))
+            {
+                Console.WriteLine("Invalid ID format!");
+                return;
+            }
+
+            var author = _authorService.GetAuthorById(id);
+            if (author == null)
             {
                 Console.WriteLine("Author not found!");
+                return;
             }
-            _authorService.DeleteAuthor(id);
-            Console.WriteLine("Author deleted successfully");
 
+            _authorService.DeleteAuthor(id);
+            Console.WriteLine("Author deleted successfully.");
         }
 
     }
