@@ -15,10 +15,11 @@ namespace Project.Actions
         private readonly IAuthorBookService _authorBookService;
 
 
-        public BookAction(IBookService bookService, IAuthorService authorService)
+        public BookAction(IBookService bookService, IAuthorService authorService, IAuthorBookService authorBookService)
         {
             _bookService = bookService;
             _authorService= authorService;
+            _authorBookService = authorBookService;
         }
         public void AddBook()
         {
